@@ -1,0 +1,12 @@
+# Para instalar as dependências, execute:
+# pip install -r requirements.txt
+
+# Dependências para os instaladores automatizados
+requests>=2.31.0
+
+# Dependências para a interface gráfica do orquestrador
+customtkinter>=5.2.0  # Framework de GUI moderno baseado em tkinter com aparência nativa Windows 10/11
+Pillow>=10.0.0        # Biblioteca de manipulação de imagens, dependência do customtkinter para renderização de elementos visuais
+
+# Dependências para build do executável (desenvolvimento)
+pyinstaller>=6.0.0   # Ferramenta para empacotar aplicativos Python em executáveis standalone

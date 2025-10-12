@@ -1,0 +1,4 @@
+# Para instalar as dependências, execute:
+# pip install -r requirements.txt
+
+requests>=2.31.0

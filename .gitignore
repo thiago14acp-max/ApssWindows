@@ -1,0 +1,39 @@
+# Python-specific
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+
+# PyInstaller-specific
+build/
+dist/
+*.spec.bak
+*.manifest
+*.exe.log
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+
+# Testing and coverage
+.pytest_cache/
+.coverage
+htmlcov/
