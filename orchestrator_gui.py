@@ -467,12 +467,14 @@ class OrchestratorApp(ctk.CTk):
             env = os.environ.copy()
             env["PYTHONUNBUFFERED"] = "1"
             
-            # Executar o subprocesso
+            # Executar o subprocesso com codificação UTF-8
             process = subprocess.Popen(
                 args,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
                 text=True,
+                encoding='utf-8',
+                errors='replace',
                 bufsize=1,
                 env=env,
                 creationflags=subprocess.CREATE_NO_WINDOW  # Windows específico para esconder console

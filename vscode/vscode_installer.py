@@ -84,35 +84,39 @@ def download_vscode():
                 time.sleep(wait_time)
 
         # Obter tamanho total do arquivo
-        total_size = response.headers.get('Content-Length')
-        if total_size is not None:
-            total_size = int(total_size)
-            total_mb = total_size / (1024 * 1024)
-        else:
-            total_size = None
+        total_size = None
+        total_mb = 0
+        if response is not None:
+            total_size = response.headers.get('Content-Length')
+            if total_size is not None:
+                total_size = int(total_size)
+                total_mb = total_size / (1024 * 1024)
+            else:
+                total_size = None
 
         # Iniciar download com barra de progresso
         downloaded = 0
         chunk_size = 8192
 
         with open(installer_path, 'wb') as file:
-            for chunk in response.iter_content(chunk_size=chunk_size):
-                if chunk:
-                    file.write(chunk)
-                    downloaded += len(chunk)
-                    downloaded_mb = downloaded / (1024 * 1024)
+            if response is not None:
+                for chunk in response.iter_content(chunk_size=chunk_size):
+                    if chunk:
+                        file.write(chunk)
+                        downloaded += len(chunk)
+                        downloaded_mb = downloaded / (1024 * 1024)
 
-                    # Exibir progresso
-                    if total_size:
-                        progress = downloaded / total_size * 100
-                        # Barra de progresso com porcentagem e total
-                        bar_length = 40
-                        filled_length = int(bar_length * progress / 100)
-                        bar = '█' * filled_length + '-' * (bar_length - filled_length)
-                        print(f'\r   Progresso: |{bar}| {progress:.1f}% ({downloaded_mb:.1f}/{total_mb:.1f} MB)', end='', flush=True)
-                    else:
-                        # Contador simples sem porcentagem
-                        print(f'\r   Baixado: {downloaded_mb:.1f} MB', end='', flush=True)
+                        # Exibir progresso
+                        if total_size:
+                            progress = downloaded / total_size * 100
+                            # Barra de progresso com porcentagem e total
+                            bar_length = 40
+                            filled_length = int(bar_length * progress / 100)
+                            bar = '█' * filled_length + '-' * (bar_length - filled_length)
+                            print(f'\r   Progresso: |{bar}| {progress:.1f}% ({downloaded_mb:.1f}/{total_mb:.1f} MB)', end='', flush=True)
+                        else:
+                            # Contador simples sem porcentagem
+                            print(f'\r   Baixado: {downloaded_mb:.1f} MB', end='', flush=True)
 
         print()  # Nova linha após o progresso
         
@@ -175,8 +179,8 @@ def install_vscode(installer_path):
         # Opcional: imprimir comando efetivo para depuração quando modo verbose estiver ativado
         # print(f"Comando de instalação: {' '.join(cmd)}")
 
-        # Executar instalação
-        result = subprocess.run(cmd, capture_output=True, text=True)
+        # Executar instalação com codificação UTF-8
+        result = subprocess.run(cmd, capture_output=True, text=True, encoding='utf-8', errors='replace')
 
         # Verificar resultado
         if result.returncode == 0:

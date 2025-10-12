@@ -84,7 +84,8 @@ def verificar_node_instalado():
     # Tenta verificar usando o PATH atual
     try:
         resultado = subprocess.run(['node', '--version'],
-                                  capture_output=True, text=True, timeout=10)
+                                  capture_output=True, text=True, timeout=10,
+                                  encoding='utf-8', errors='replace')
         if resultado.returncode == 0:
             versao = resultado.stdout.strip()
             # Remove o prefixo 'v' da versão
@@ -105,7 +106,8 @@ def verificar_node_instalado():
             if os.path.exists(node_exe):
                 try:
                     resultado = subprocess.run([node_exe, '--version'],
-                                              capture_output=True, text=True, timeout=10)
+                                              capture_output=True, text=True, timeout=10,
+                                              encoding='utf-8', errors='replace')
                     if resultado.returncode == 0:
                         versao = resultado.stdout.strip()
                         # Remove o prefixo 'v' da versão
@@ -521,7 +523,8 @@ def baixar_instalador(versao_info, arquitetura, session=None, download_timeout=3
 
     except (requests.RequestException, IOError, KeyError) as e:
         print(f"\nErro ao baixar instalador: {e}")
-        if 'temp_path' in locals() and os.path.exists(temp_path):
+        temp_path = locals().get('temp_path')
+        if temp_path and os.path.exists(temp_path):
             os.unlink(temp_path)
         return None, None
 
@@ -563,7 +566,8 @@ def instalar_nodejs(caminho_msi, install_timeout=300, all_users=False):
         else:
             print("Instalando apenas para o usuário atual...")
 
-        resultado = subprocess.run(comando, timeout=install_timeout)
+        resultado = subprocess.run(comando, timeout=install_timeout,
+                                  encoding='utf-8', errors='replace')
 
         if resultado.returncode == 0:
             print("Instalação concluída com sucesso!")
@@ -687,13 +691,15 @@ def configurar_execution_policy():
                 '-Scope', 'CurrentUser', '-Force'
             ]
 
-            # Executar o comando usando subprocess
+            # Executar o comando usando subprocess com codificação UTF-8
             resultado = subprocess.run(
                 comando,
                 capture_output=True,
                 text=True,
                 timeout=30,
-                check=False
+                check=False,
+                encoding='utf-8',
+                errors='replace'
             )
 
             # Verificar o resultado
@@ -806,7 +812,9 @@ def instalar_gemini_cli(npm_timeout=300):
             text=True,
             timeout=npm_timeout,
             check=False,
-            env=novo_ambiente
+            env=novo_ambiente,
+            encoding='utf-8',
+            errors='replace'
         )
 
         # Verificar o resultado
@@ -912,7 +920,9 @@ def instalar_qwen_code(npm_timeout=300):
             text=True,
             timeout=npm_timeout,
             check=False,
-            env=novo_ambiente
+            env=novo_ambiente,
+            encoding='utf-8',
+            errors='replace'
         )
 
         # Verificar o resultado
@@ -936,7 +946,9 @@ def instalar_qwen_code(npm_timeout=300):
                         text=True,
                         timeout=10,
                         check=False,
-                        env=novo_ambiente
+                        env=novo_ambiente,
+                        encoding='utf-8',
+                        errors='replace'
                     )
 
                     if resultado_qwen.returncode == 0:
@@ -1190,7 +1202,7 @@ Exemplos:
     versao_mais_recente = versao_info['version'].lstrip('v')
 
     if args.version:
-        alvo_sem_v = versao_alvo.lstrip('v')
+        alvo_sem_v = versao_alvo.lstrip('v') if versao_alvo else "desconhecida"
         print(f"Versão selecionada: {alvo_sem_v}")
     else:
         track_desc = "LTS" if args.track == 'lts' else "Current"
