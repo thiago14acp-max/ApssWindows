@@ -9,20 +9,27 @@
 
 ## 📋 Sobre o Projeto
 
-O Orquestrador de Instalações é uma ferramenta desenvolvida para simplificar e automatizar o processo de instalação de ferramentas essenciais de desenvolvimento em ambientes Windows. Com uma interface intuitiva e moderna, este aplicativo permite instalar Node.js, VS Code e outras ferramentas com apenas alguns cliques, eliminando a necessidade de downloads manuais e configurações complexas.
+O Orquestrador de Instalações é uma ferramenta desenvolvida para simplificar e automatizar o processo de instalação de ferramentas essenciais de desenvolvimento em ambientes Windows. Com uma interface intuitiva e moderna, este aplicativo permite instalar Node.js, VS Code e outras ferramentas com apenas alguns cliques, eliminando a necessidade de downloads manuais e configurações complexas. A versão mais recente inclui suporte para instalação de CLIs avançados como Google Gemini e Qwen Code, além de recursos avançados de verificação e segurança.
 
 ## ✨ Recursos
 
 - 🎨 Interface gráfica moderna com CustomTkinter
-- 📦 Instalação automatizada de Node.js + CLI Tools
+- 📦 Instalação automatizada de Node.js + CLI Tools (npm, npx)
 - 💻 Instalação automatizada de Visual Studio Code
-- 📊 Console de logs em tempo real
+- 🤖 Instalação de CLIs adicionais (Google Gemini, Qwen Code)
+- 📊 Console de logs em tempo real com coloração por nível
 - 📈 Barra de progresso com status detalhado
 - 🌓 Suporte a temas (System/Light/Dark)
 - ⚙️ Configurações personalizáveis (timeouts, modo automático)
 - ❌ Cancelamento de instalações em andamento
 - 🪟 Compatibilidade com Windows 10 e 11
 - 🔍 Suporte a High-DPI
+- 🔐 Verificação de integridade com checksums SHA256
+- 🌐 Suporte a proxy corporativo e certificados personalizados
+- 🏗️ Arquitetura modular para fácil manutenção e extensibilidade
+- 📋 Detecção e aviso de conflitos com nvm-windows
+- 💾 Atualização automática do Node.js (se já instalado)
+- 📥 Download com barra de progresso e fallback de arquitetura ARM64 para x64
 
 ## 📋 Requisitos
 
@@ -30,7 +37,7 @@ O Orquestrador de Instalações é uma ferramenta desenvolvida para simplificar 
 - Windows 10 ou 11 (64-bit)
 - Python 3.8+ (para execução via código-fonte)
 - 🌐 Conexão com internet (para downloads)
-- 🔐 Permissões de administrador (para instalações)
+- 🔐 Permissões de administrador (recomendado para instalações)
 
 ## 🛠️ Instalação
 
@@ -50,19 +57,22 @@ O Orquestrador de Instalações é uma ferramenta desenvolvida para simplificar 
 
 ### 🎯 Uso Básico:
 1. ▶️ Inicie a aplicação
-2. ☑️ Selecione as ferramentas para instalar (caixas de seleção para Node.js e/ou VS Code)
+2. ☑️ Selecione as ferramentas para instalar (Node.js, VS Code, e/ou CLIs adicionais)
 3. ⚙️ Configure as configurações (opcional):
    - 🤖 Habilite "Modo Automático" para instalação não assistida
    - ⏱️ Ajuste os valores de timeout, se necessário
+   - 🌐 Configure proxy se necessário
 4. 🚀 Clique em "Iniciar Instalação"
 5. 👀 Monitore o progresso na área do console
 6. ✅ Aguarde a mensagem de conclusão
 
 ### 🔧 Configurações Avançadas:
 - **🤖 Modo Automático (--yes)**: Ignora prompts de confirmação no instalador Node.js
-- **⏱️ Timeout de Download**: Tempo máximo (segundos) para esperar downloads (padrão: 300)
+- **⏱️ Timeout de Download**: Tempo máximo (segundos) para esperar downloads (padrão: 30)
 - **⏱️ Timeout de Instalação**: Tempo máximo (segundos) para esperar instalações (padrão: 600)
 - **🎨 Tema da Interface**: Escolha entre os temas System, Light ou Dark
+- **🌐 Proxy**: Configurar proxy para requisições HTTP/HTTPS
+- **🔒 Certificados**: Usar certificado CA personalizado ou desativar verificação SSL (não recomendado)
 
 ### ❌ Cancelando Instalações:
 - 🛑 Clique no botão "Cancelar" durante a instalação
@@ -114,6 +124,10 @@ O Orquestrador de Instalações é uma ferramenta desenvolvida para simplificar 
 - **📁 Verifique a pasta `%TEMP%` quanto a erros de extração do PyInstaller**
 - **✅ Certifique-se de que todos os três executáveis estão presentes na pasta `dist`**
 
+#### ❌ Conflito com nvm-windows detectado:
+- **🔧 Solução**: O instalador detecta automaticamente se o nvm-windows está instalado e alerta sobre possíveis conflitos
+- **📝 Recomendação**: Use o nvm-windows para gerenciar versões do Node.js se já estiver instalado
+
 ## 📁 Estrutura do Projeto
 
 ```
@@ -127,7 +141,13 @@ Instalacoes/
 ├── nodeecli/
 │   ├── install_nodejs_refactored.py  # 📦 Script de instalação do Node.js (modular)
 │   ├── requirements.txt       # 📋 Dependências do instalador Node.js
-│   └── README.md              # 📖 Documentação do instalador Node.js
+│   ├── README.md              # 📖 Documentação do instalador Node.js
+│   └── modules/               # 🧩 Módulos da versão modularizada
+│       ├── __init__.py        # Inicialização do pacote
+│       ├── common.py          # Funcionalidades compartilhadas
+│       ├── nodejs_installer.py # Instalador do Node.js
+│       ├── gemini_cli_installer.py # Instalador do Gemini CLI
+│       └── qwen_cli_installer.py # Instalador do Qwen CLI
 └── vscode/
     ├── vscode_installer.py    # 💻 Script de instalação do VS Code
     └── README.md              # 📖 Documentação do instalador VS Code
@@ -138,8 +158,9 @@ Instalacoes/
 ### 🏗️ Arquitetura:
 - **🎨 Framework GUI**: CustomTkinter (wrapper moderno do tkinter)
 - **🧵 Threading**: Threads em segundo plano para execução de subprocessos
-- **📡 IPC**: Passagem de mensagens baseada em fila para atualizações thread-safe da GUI
+- **📡 IPC**: Passação de mensagens baseada em fila para atualizações thread-safe da GUI
 - **⚙️ Gerenciamento de Subprocessos**: Módulo `subprocess` do Python com captura de saída em tempo real
+- **📦 Modularização**: Código organizado em módulos independentes para fácil manutenção
 
 ### 🔧 Componentes Chave:
 - **📱 Classe `OrchestratorApp`**: Janela principal da aplicação e lógica
@@ -148,10 +169,16 @@ Instalacoes/
 - **📜 `run_script()`**: Wrapper de subprocess com captura de saída
 - **📨 `process_queue()`**: Processador de mensagens da thread da GUI
 - **🛑 `cancel_installation()`**: Terminação graceful de processos
+- **🔍 `NodejsInstaller`**: Classe responsável pela instalação do Node.js
+- **🤖 `GeminiCliInstaller`**: Classe responsável pela instalação do Gemini CLI
+- **🤖 `QwenCliInstaller`**: Classe responsável pela instalação do Qwen CLI
 
-## 📸 Capturas de Tela
+### 🛡️ Recursos de Segurança e Verificação:
+- **✅ Verificação SHA256**: Todos os downloads são verificados com checksums oficiais
+- **🌐 Suporte a Proxy**: Configuração de proxy para ambientes corporativos
+- **🔒 Certificados Personalizados**: Suporte a CA personalizada para ambientes com certificados corporativos
+- **⚠️ Detecção de Conflitos**: Verificação de nvm-windows e alerta de possíveis conflitos
 
-*Em breve...*
 
 ## 📞 Contato/Suporte
 
