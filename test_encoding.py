@@ -14,7 +14,7 @@ def test_nodejs_script():
     
     # Adicionar diretório atual ao PATH
     current_dir = os.path.dirname(os.path.abspath(__file__))
-    nodejs_script = os.path.join(current_dir, "nodeecli", "install_nodejs.py")
+    nodejs_script = os.path.join(current_dir, "nodeecli", "install_nodejs_refactored.py")
     
     # Configurar variável de ambiente para forçar UTF-8
     env = os.environ.copy()

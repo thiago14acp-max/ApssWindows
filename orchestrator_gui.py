@@ -24,7 +24,7 @@ except ImportError:
     sys.exit(1)
 
 # Configuração de caminhos para os scripts de instalação
-NODEJS_SCRIPT_PATH = Path(__file__).parent / "nodeecli" / "install_nodejs.py"
+NODEJS_SCRIPT_PATH = Path(__file__).parent / "nodeecli" / "install_nodejs_refactored.py"
 VSCODE_SCRIPT_PATH = Path(__file__).parent / "vscode" / "vscode_installer.py"
 
 
@@ -229,6 +229,13 @@ class OrchestratorApp(ctk.CTk):
     def change_theme(self, theme_name):
         """Altera o tema da interface."""
         ctk.set_appearance_mode(theme_name.lower())
+
+        # Ajusta a cor da fonte do log INFO com base no tema
+        if theme_name.lower() == "light":
+            self.console_textbox.tag_config("INFO", foreground="black")
+        else:  # Dark ou System
+            self.console_textbox.tag_config("INFO", foreground="white")
+
         self.log_message(f"Tema alterado para: {theme_name}")
     
     def on_checkbox_changed(self):

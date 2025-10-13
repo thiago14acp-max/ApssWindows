@@ -20,12 +20,12 @@ def test_nodejs_installation():
     
     # Adicionar diretório atual ao PATH
     current_dir = os.path.dirname(os.path.abspath(__file__))
-    nodejs_script = os.path.join(current_dir, "nodeecli", "install_nodejs.py")
+    nodejs_script = os.path.join(current_dir, "nodeecli", "install_nodejs_refactored.py")
     
     # Executar o script de instalação do Node.js com --yes e --verbose
     # para simular o cenário original
     print("Executando instalador do Node.js...")
-    print("Comando: python install_nodejs.py --yes --verbose")
+    print("Comando: python install_nodejs_refactored.py --yes --verbose")
     print("-" * 60)
     
     try:

@@ -10,7 +10,7 @@ a = Analysis(
     binaries=[],
     datas=[
         *collect_data_files('customtkinter'),
-        ('nodeecli/install_nodejs.py', 'nodeecli'),
+        ('nodeecli/install_nodejs_refactored.py', 'nodeecli'),
         ('nodeecli/README.md', 'nodeecli'),
         ('vscode/vscode_installer.py', 'vscode'),
         ('vscode/README.md', 'vscode')
@@ -60,7 +60,7 @@ exe = EXE(
 
 # Análise separada para o instalador do Node.js
 nodejs_analysis = Analysis(
-    ['nodeecli/install_nodejs.py'],
+    ['nodeecli/install_nodejs_refactored.py'],
     pathex=['.'],
     binaries=[],
     datas=[],

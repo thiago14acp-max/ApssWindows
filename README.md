@@ -96,7 +96,7 @@ O Orquestrador de Instalações é uma ferramenta desenvolvida para simplificar 
 - **🔧 Solução**: Instale as dependências com `pip install -r requirements.txt`
 
 #### ❌ Erro "Script não encontrado":
-- **🔧 Solução**: Certifique-se de que `nodeecli/install_nodejs.py` e `vscode/vscode_installer.py` existem
+- **🔧 Solução**: Certifique-se de que `nodeecli/install_nodejs_refactored.py` e `vscode/vscode_installer.py` existem
 - **🔧 Para o executável**: Verifique se os executáveis `install_nodejs.exe` e `vscode_installer.exe` existem na pasta `dist`
 
 #### ❌ Instalação falha com timeout:
@@ -125,7 +125,7 @@ Instalacoes/
 ├── icon.ico                   # 🎨 Ícone da aplicação
 ├── README.md                  # 📖 Este arquivo
 ├── nodeecli/
-│   ├── install_nodejs.py      # 📦 Script de instalação do Node.js
+│   ├── install_nodejs_refactored.py  # 📦 Script de instalação do Node.js (modular)
 │   ├── requirements.txt       # 📋 Dependências do instalador Node.js
 │   └── README.md              # 📖 Documentação do instalador Node.js
 └── vscode/
