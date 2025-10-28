@@ -135,8 +135,15 @@ class MainView(ctk.CTk):
 
     def _setup_log_tags(self) -> None:
         """Sets up tags for log coloring."""
+        self.update_log_tags()
+
+    def update_log_tags(self) -> None:
+        """Updates log colors based on the current theme."""
+        theme = ctk.get_appearance_mode()
+        info_color = "black" if theme == "Light" else "white"
+
         colors = {
-            "INFO": "#FFFFFF",
+            "INFO": info_color,
             "WARNING": "#FFD700",
             "ERROR": "#FF6B6B",
             "SUCCESS": "#51CF66",

@@ -40,6 +40,7 @@ class OrchestratorApp:
     def _change_theme(self, theme_name: str) -> None:
         """Changes the application theme."""
         ctk.set_appearance_mode(theme_name.lower())
+        self.root.update_log_tags()
         self.root.log_message(f"Tema alterado para: {theme_name}", "INFO")
 
     def _validate_settings(self) -> bool:

@@ -1,56 +1,24 @@
 @echo off
-REM Script para instalar dependências e executar o Orquestrador de Instalações
+REM Script para instalar dependências e executar a aplicação
 
-REM Mudar para o diretório onde este script está localizado
-cd /d "%~dp0"
-
-echo Iniciando instalacao das dependencias...
-echo Diretorio atual: %CD%
-
-REM Verifica se o Python está instalado
+echo Verificando a instalação do Python...
 python --version >nul 2>&1
-if errorlevel 1 (
-    echo Erro: Python nao encontrado. Por favor, instale o Python antes de executar este script.
+if %errorlevel% neq 0 (
+    echo Python não está instalado ou não está no PATH.
+    echo Por favor, instale o Python 3.7+ e tente novamente.
     pause
     exit /b 1
 )
 
-REM Verifica se o pip está instalado
-pip --version >nul 2>&1
-if errorlevel 1 (
-    echo Erro: Pip nao encontrado. Por favor, instale o pip antes de executar este script.
-    pause
-    exit /b 1
-)
-
-REM Verifica se o arquivo requirements.txt existe
-if not exist "requirements.txt" (
-    echo Erro: Arquivo requirements.txt nao encontrado no diretorio atual.
-    echo Verifique se o arquivo esta no mesmo diretorio que este script.
-    pause
-    exit /b 1
-)
-
-echo Instalando dependencias do arquivo requirements.txt...
+echo Instalando dependências do requirements.txt...
 pip install -r requirements.txt
-
-if errorlevel 1 (
-    echo Erro durante a instalacao das dependencias.
+if %errorlevel% neq 0 (
+    echo Falha ao instalar as dependências.
     pause
     exit /b 1
 )
 
-echo Dependencias instaladas com sucesso!
+echo Iniciando a aplicação...
+python src/main.py
 
-echo Executando o Orquestrador de Instalações...
-set PYTHONIOENCODING=utf-8
-python orchestrator_gui.py
-
-if errorlevel 1 (
-    echo Erro durante a execucao do script orchestrator_gui.py
-    pause
-    exit /b 1
-)
-
-echo Execucao concluida.
 pause
