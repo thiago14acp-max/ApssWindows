@@ -150,17 +150,22 @@ def test_refactored_script():
     print("\nTestando script refatorored...")
     
     try:
+        # Obter o caminho para o diretório do script de teste
+        test_dir = os.path.dirname(os.path.abspath(__file__))
+        script_path = os.path.join(test_dir, "install_nodejs_refactored.py")
+
         # Verificar se o arquivo existe
-        if not os.path.exists("install_nodejs_refactored.py"):
-            print("❌ Arquivo install_nodejs_refactored.py não encontrado")
+        if not os.path.exists(script_path):
+            print(f"❌ Arquivo {script_path} não encontrado")
             return False
         
         print("✓ Arquivo install_nodejs_refactored.py encontrado")
         
         # Tentar importar as funções principais
         import importlib.util
-        spec = importlib.util.spec_from_file_location("refactored", "install_nodejs_refactored.py")
+        spec = importlib.util.spec_from_file_location("refactored", script_path)
         refactored = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(refactored)
         
         # Verificar se as funções principais existem
         expected_functions = [
