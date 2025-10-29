@@ -9,15 +9,12 @@ corretamente sem realizar instalações reais.
 import sys
 import os
 
-# Adicionar o diretório atual ao path para importar os módulos
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-
 def test_imports():
     """Testa se todos os módulos podem ser importados corretamente."""
     print("Testando imports dos módulos...")
     
     try:
-        from modules.common import (
+        from nodeecli.modules.common import (
             Logger, configure_stdout_stderr, detectar_arquitetura, 
             verificar_permissoes_admin, detectar_nvm_windows, 
             configurar_execution_policy, preparar_ambiente_nodejs
@@ -28,7 +25,7 @@ def test_imports():
         return False
     
     try:
-        from modules.nodejs_installer import (
+        from nodeecli.modules.nodejs_installer import (
             NodejsInstaller, verificar_node_instalado, obter_versao_mais_recente,
             comparar_versoes, verificar_disponibilidade_arquivo,
             baixar_instalador, instalar_nodejs
@@ -39,14 +36,14 @@ def test_imports():
         return False
     
     try:
-        from modules.gemini_cli_installer import GeminiCliInstaller
+        from nodeecli.modules.gemini_cli_installer import GeminiCliInstaller
         print("✓ Módulo gemini_cli_installer importado com sucesso")
     except ImportError as e:
         print(f"❌ Erro ao importar módulo gemini_cli_installer: {e}")
         return False
     
     try:
-        from modules.qwen_cli_installer import QwenCliInstaller
+        from nodeecli.modules.qwen_cli_installer import QwenCliInstaller
         print("✓ Módulo qwen_cli_installer importado com sucesso")
     except ImportError as e:
         print(f"❌ Erro ao importar módulo qwen_cli_installer: {e}")
@@ -60,7 +57,7 @@ def test_common_functionality():
     print("\nTestando funcionalidades do módulo common...")
     
     try:
-        from modules.common import (
+        from nodeecli.modules.common import (
             detectar_arquitetura, verificar_permissoes_admin, 
             detectar_nvm_windows, preparar_ambiente_nodejs, Logger
         )
@@ -98,10 +95,10 @@ def test_installers_initialization():
     print("\nTestando inicialização dos instaladores...")
     
     try:
-        from modules.common import Logger
-        from modules.nodejs_installer import NodejsInstaller
-        from modules.gemini_cli_installer import GeminiCliInstaller
-        from modules.qwen_cli_installer import QwenCliInstaller
+        from nodeecli.modules.common import Logger
+        from nodeecli.modules.nodejs_installer import NodejsInstaller
+        from nodeecli.modules.gemini_cli_installer import GeminiCliInstaller
+        from nodeecli.modules.qwen_cli_installer import QwenCliInstaller
         
         logger = Logger(verbose=False)
         
@@ -152,7 +149,7 @@ def test_refactored_script():
     try:
         # Obter o caminho para o diretório do script de teste
         test_dir = os.path.dirname(os.path.abspath(__file__))
-        script_path = os.path.join(test_dir, "install_nodejs_refactored.py")
+        script_path = os.path.join(test_dir, "..", "..", "nodeecli", "install_nodejs_refactored.py")
 
         # Verificar se o arquivo existe
         if not os.path.exists(script_path):

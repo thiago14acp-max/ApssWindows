@@ -1,0 +1,1 @@
+# Este arquivo torna a pasta nodeecli um pacote Python válido

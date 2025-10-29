@@ -51,7 +51,38 @@ python srcmain.py
 - `vscode/`: instalador do Visual Studio Code
 - `git/`: instalador do Git for Windows
 - `mcp_excel/`: instalador do MCP Excel Server
+- `tests/`: testes do projeto
+  - `integration/`: testes de integração que verificam o funcionamento completo dos instaladores
+  - `nodeecli/`: testes específicos do módulo Node.js CLI
 - `orchestrator.spec`: configuração do PyInstaller
 - `build_exe.bat`: script de build (gera executáveis em `dist/`)
 - `install_and_run.bat`: instalação e execução rápidas (Windows)
 - `requirements.txt`: dependências Python
+
+## Testes
+
+O projeto possui uma estrutura de testes organizada para verificar o funcionamento dos instaladores:
+
+### Testes de Integração
+
+Localizados em `tests/integration/`, estes testes verificam o funcionamento completo dos instaladores:
+
+- `test_nodejs_installation.py`: Testa a instalação do Node.js simulando o cenário original
+- `test_encoding.py`: Verifica problemas de codificação em múltiplos scripts (Node.js e VS Code)
+
+Para executar os testes de integração:
+```bash
+python tests/integration/test_nodejs_installation.py
+python tests/integration/test_encoding.py
+```
+
+### Testes de Módulos Específicos
+
+Localizados em `tests/nodeecli/`, estes testes verificam componentes específicos do módulo Node.js CLI:
+
+- `test_modular.py`: Testa a implementação modularizada do instalador Node.js
+
+Para executar os testes modulares:
+```bash
+python tests/nodeecli/test_modular.py
+```

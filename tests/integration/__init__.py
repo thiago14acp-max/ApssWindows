@@ -1,0 +1,1 @@
+# Este arquivo torna a pasta integration um pacote Python válido
