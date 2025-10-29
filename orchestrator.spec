@@ -5,15 +5,13 @@ from PyInstaller.utils.hooks import collect_data_files, collect_submodules
 block_cipher = None
 
 a = Analysis(
-    ['orchestrator_gui.py'],
+    ['srcmain.py'],
     pathex=['.'],
     binaries=[],
     datas=[
         *collect_data_files('customtkinter'),
-        ('nodeecli/install_nodejs_refactored.py', 'nodeecli'),
         ('nodeecli/README.md', 'nodeecli'),
-        ('vscode/vscode_installer.py', 'vscode'),
-        ('vscode/README.md', 'vscode')
+        ('vscode/README.md', 'vscode'),
     ],
     hiddenimports=[
         'customtkinter',
@@ -150,6 +148,105 @@ vscode_exe = EXE(
     vscode_analysis.datas,
     [],
     name='vscode_installer',
+    debug=False,
+    bootloader_ignore_signals=False,
+    strip=False,
+    upx=True,
+    upx_exclude=[],
+    runtime_tmpdir=None,
+    console=True,
+    disable_windowed_traceback=False,
+    argv_emulation=False,
+    target_arch=None,
+    codesign_identity=None,
+    entitlements_file=None,
+    icon='icon.ico'
+)
+
+# Análise separada para o instalador do MCP Excel Server
+mcp_excel_analysis = Analysis(
+    ['mcp_excel/mcp_excel_installer.py'],
+    pathex=['.'],
+    binaries=[],
+    datas=[],
+    hiddenimports=[
+        'subprocess',
+        'pathlib',
+        'shutil',
+        'sys',
+        'os',
+    ],
+    hookspath=[],
+    hooksconfig={},
+    runtime_hooks=[],
+    excludes=[],
+    win_no_prefer_redirects=False,
+    win_private_assemblies=False,
+    cipher=block_cipher,
+    noarchive=False,
+)
+
+mcp_excel_pyz = PYZ(mcp_excel_analysis.pure, mcp_excel_analysis.zipped_data, cipher=block_cipher)
+
+mcp_excel_exe = EXE(
+    mcp_excel_pyz,
+    mcp_excel_analysis.scripts,
+    mcp_excel_analysis.binaries,
+    mcp_excel_analysis.zipfiles,
+    mcp_excel_analysis.datas,
+    [],
+    name='mcp_excel_installer',
+    debug=False,
+    bootloader_ignore_signals=False,
+    strip=False,
+    upx=True,
+    upx_exclude=[],
+    runtime_tmpdir=None,
+    console=True,
+    disable_windowed_traceback=False,
+    argv_emulation=False,
+    target_arch=None,
+    codesign_identity=None,
+    entitlements_file=None,
+    icon='icon.ico'
+)
+
+# Análise separada para o instalador do Git
+git_analysis = Analysis(
+    ['git/git_installer.py'],
+    pathex=['.'],
+    binaries=[],
+    datas=[],
+    hiddenimports=[
+        'requests',
+        'subprocess',
+        'tempfile',
+        'pathlib',
+        'time',
+        'ctypes',
+        'platform',
+        'json',
+    ],
+    hookspath=[],
+    hooksconfig={},
+    runtime_hooks=[],
+    excludes=[],
+    win_no_prefer_redirects=False,
+    win_private_assemblies=False,
+    cipher=block_cipher,
+    noarchive=False,
+)
+
+git_pyz = PYZ(git_analysis.pure, git_analysis.zipped_data, cipher=block_cipher)
+
+git_exe = EXE(
+    git_pyz,
+    git_analysis.scripts,
+    git_analysis.binaries,
+    git_analysis.zipfiles,
+    git_analysis.datas,
+    [],
+    name='git_installer',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,

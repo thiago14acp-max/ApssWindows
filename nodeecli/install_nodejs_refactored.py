@@ -34,6 +34,12 @@ except ImportError as e:
     print("Verifique se os módulos estão no diretório 'modules' corretamente.")
     sys.exit(1)
 
+# Garantir stdout/stderr em UTF-8 no início
+try:
+    configure_stdout_stderr()
+except Exception:
+    pass
+
 # Verificar se a biblioteca requests está instalada
 try:
     import requests

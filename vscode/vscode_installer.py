@@ -1,8 +1,8 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
-VS Code Installer - Instalador Automático
-Script Python que automatiza o download e instalação do Visual Studio Code no Windows 10/11
-com todas as opções habilitadas automaticamente.
+VS Code Installer - Instalador AutomÃƒÂ¡tico
+Script Python que automatiza o download e instalaÃƒÂ§ÃƒÂ£o do Visual Studio Code no Windows 10/11
+com todas as opÃƒÂ§ÃƒÂµes habilitadas automaticamente.
 """
 
 import os
@@ -16,6 +16,7 @@ import platform
 from pathlib import Path
 
 
+
 # Constantes
 VSCODE_DOWNLOAD_URL = "https://update.code.visualstudio.com/latest/win32-x64-user/stable"
 INSTALL_ARGS = ["/VERYSILENT", "/SP-", "/NORESTART", "/MERGETASKS=!runcode,desktopicon,addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath"]
@@ -24,14 +25,14 @@ INSTALL_ARGS = ["/VERYSILENT", "/SP-", "/NORESTART", "/MERGETASKS=!runcode,deskt
 def print_banner():
     """Exibe banner de boas-vindas."""
     print("=" * 60)
-    print("    VS Code Installer - Instalador Automático")
-    print("     Download e instalação do VS Code no Windows")
+    print("    VS Code Installer - Instalador AutomÃƒÂ¡tico")
+    print("     Download e instalaÃƒÂ§ÃƒÂ£o do VS Code no Windows")
     print("=" * 60)
     print()
 
 
 def is_admin() -> bool:
-    """Verifica se o script está sendo executado com privilégios de administrador."""
+    """Verifica se o script estÃƒÂ¡ sendo executado com privilÃƒÂ©gios de administrador."""
     try:
         return ctypes.windll.shell32.IsUserAnAdmin() != 0
     except Exception:
@@ -39,9 +40,9 @@ def is_admin() -> bool:
 
 
 def verify_windows():
-    """Verifica se está rodando no Windows."""
+    """Verifica se estÃƒÂ¡ rodando no Windows."""
     if sys.platform != "win32":
-        print("❌ Erro: Este script só funciona no Windows.")
+        print("Ã¢ÂÅ’ Erro: Este script sÃƒÂ³ funciona no Windows.")
         return False
     return True
 
@@ -54,13 +55,13 @@ def download_vscode():
         str: Caminho completo do arquivo baixado
         None: Em caso de erro
     """
-    print("📥 Baixando VS Code...")
+    print("Ã°Å¸â€œÂ¥ Baixando VS Code...")
     print(f"   URL: {VSCODE_DOWNLOAD_URL}")
     print(f"   Tamanho estimado: ~100 MB")
     print()
 
     try:
-        # Criar arquivo temporário com nome único
+        # Criar arquivo temporÃƒÂ¡rio com nome ÃƒÂºnico
         temp_file = tempfile.NamedTemporaryFile(suffix='.exe', delete=False)
         installer_path = temp_file.name
         temp_file.close()  # Fechar pois vamos escrever diretamente no arquivo
@@ -112,13 +113,13 @@ def download_vscode():
                             # Barra de progresso com porcentagem e total
                             bar_length = 40
                             filled_length = int(bar_length * progress / 100)
-                            bar = '█' * filled_length + '-' * (bar_length - filled_length)
+                            bar = 'Ã¢â€“Ë†' * filled_length + '-' * (bar_length - filled_length)
                             print(f'\r   Progresso: |{bar}| {progress:.1f}% ({downloaded_mb:.1f}/{total_mb:.1f} MB)', end='', flush=True)
                         else:
                             # Contador simples sem porcentagem
                             print(f'\r   Baixado: {downloaded_mb:.1f} MB', end='', flush=True)
 
-        print()  # Nova linha após o progresso
+        print()  # Nova linha apÃƒÂ³s o progresso
         
         # Verificar integridade do download comparando bytes baixados com Content-Length
         if total_size is not None and downloaded != total_size:
@@ -126,86 +127,86 @@ def download_vscode():
                 os.remove(installer_path)
             except Exception:
                 pass
-            print("\n❌ Download incompleto: tamanho inesperado do arquivo.")
+            print("\nÃ¢ÂÅ’ Download incompleto: tamanho inesperado do arquivo.")
             return None
             
-        print(f"✅ Download concluído: {installer_path}")
+        print(f"Ã¢Å“â€¦ Download concluÃƒÂ­do: {installer_path}")
         return str(installer_path)
 
     except requests.exceptions.RequestException as e:
-        print(f"\n❌ Erro de conexão após 3 tentativas: {e}")
-        print("   Verifique sua conexão com a internet e tente novamente.")
+        print(f"\nÃ¢ÂÅ’ Erro de conexÃƒÂ£o apÃƒÂ³s 3 tentativas: {e}")
+        print("   Verifique sua conexÃƒÂ£o com a internet e tente novamente.")
         return None
     except IOError as e:
-        print(f"\n❌ Erro ao salvar arquivo: {e}")
-        print("   Verifique o espaço em disco e permissões.")
+        print(f"\nÃ¢ÂÅ’ Erro ao salvar arquivo: {e}")
+        print("   Verifique o espaÃƒÂ§o em disco e permissÃƒÂµes.")
         return None
     except Exception as e:
-        print(f"\n❌ Erro inesperado no download: {e}")
+        print(f"\nÃ¢ÂÅ’ Erro inesperado no download: {e}")
         return None
 
 
 def install_vscode(installer_path):
     """
-    Executa a instalação do VS Code com flags silenciosas.
+    Executa a instalaÃƒÂ§ÃƒÂ£o do VS Code com flags silenciosas.
 
     Args:
         installer_path (str): Caminho do instalador
 
     Returns:
-        bool: True se instalação bem-sucedida, False caso contrário
+        bool: True se instalaÃƒÂ§ÃƒÂ£o bem-sucedida, False caso contrÃƒÂ¡rio
     """
-    print("\n🔧 Iniciando instalação do VS Code...")
-    print("   Opções que serão habilitadas:")
-    print("   ✅ Criar ícone na área de trabalho")
-    print("   ✅ Adicionar ao menu de contexto (arquivos)")
-    print("   ✅ Adicionar ao menu de contexto (pastas)")
-    print("   ✅ Associar com tipos de arquivo suportados")
-    print("   ✅ Adicionar ao PATH (comando 'code')")
+    print("\nÃ°Å¸â€Â§ Iniciando instalaÃƒÂ§ÃƒÂ£o do VS Code...")
+    print("   OpÃƒÂ§ÃƒÂµes que serÃƒÂ£o habilitadas:")
+    print("   Ã¢Å“â€¦ Criar ÃƒÂ­cone na ÃƒÂ¡rea de trabalho")
+    print("   Ã¢Å“â€¦ Adicionar ao menu de contexto (arquivos)")
+    print("   Ã¢Å“â€¦ Adicionar ao menu de contexto (pastas)")
+    print("   Ã¢Å“â€¦ Associar com tipos de arquivo suportados")
+    print("   Ã¢Å“â€¦ Adicionar ao PATH (comando 'code')")
     print()
-    print("   ⏳ Isso pode levar alguns minutos...")
+    print("   Ã¢ÂÂ³ Isso pode levar alguns minutos...")
     print()
 
     try:
         # Verificar se o arquivo existe
         if not os.path.exists(installer_path):
-            print(f"❌ Arquivo não encontrado: {installer_path}")
+            print(f"Ã¢ÂÅ’ Arquivo nÃƒÂ£o encontrado: {installer_path}")
             return False
 
         # Construir comando em formato de lista
         log_file = Path(tempfile.gettempdir()) / "vscode_install.log"
         cmd = [str(installer_path), *INSTALL_ARGS, f"/LOG={log_file}"]
         
-        # Opcional: imprimir comando efetivo para depuração quando modo verbose estiver ativado
-        # print(f"Comando de instalação: {' '.join(cmd)}")
+        # Opcional: imprimir comando efetivo para depuraÃƒÂ§ÃƒÂ£o quando modo verbose estiver ativado
+        # print(f"Comando de instalaÃƒÂ§ÃƒÂ£o: {' '.join(cmd)}")
 
-        # Executar instalação com codificação UTF-8
+        # Executar instalaÃƒÂ§ÃƒÂ£o com codificaÃƒÂ§ÃƒÂ£o UTF-8
         result = subprocess.run(cmd, capture_output=True, text=True, encoding='utf-8', errors='replace')
 
         # Verificar resultado
         if result.returncode == 0:
-            print("✅ VS Code instalado com sucesso!")
+            print("Ã¢Å“â€¦ VS Code instalado com sucesso!")
             print()
-            print("📋 Notas importantes:")
-            print("   • O VS Code foi instalado no seu perfil de usuário")
-            print("   • Reinicie o terminal para usar o comando 'code'")
-            print("   • Para desinstalar, use o desinstalador padrão do Windows")
-            print(f"   • Log da instalação salvo em: {log_file}")
+            print("Ã°Å¸â€œâ€¹ Notas importantes:")
+            print("   Ã¢â‚¬Â¢ O VS Code foi instalado no seu perfil de usuÃƒÂ¡rio")
+            print("   Ã¢â‚¬Â¢ Reinicie o terminal para usar o comando 'code'")
+            print("   Ã¢â‚¬Â¢ Para desinstalar, use o desinstalador padrÃƒÂ£o do Windows")
+            print(f"   Ã¢â‚¬Â¢ Log da instalaÃƒÂ§ÃƒÂ£o salvo em: {log_file}")
             return True
         else:
-            print(f"❌ Erro na instalação (código: {result.returncode})")
+            print(f"Ã¢ÂÅ’ Erro na instalaÃƒÂ§ÃƒÂ£o (cÃƒÂ³digo: {result.returncode})")
             if result.stderr:
                 print(f"   Detalhes: {result.stderr}")
             return False
 
     except Exception as e:
-        print(f"❌ Erro durante a instalação: {e}")
+        print(f"Ã¢ÂÅ’ Erro durante a instalaÃƒÂ§ÃƒÂ£o: {e}")
         return False
 
 
 def cleanup(installer_path):
     """
-    Remove o arquivo do instalador após a instalação.
+    Remove o arquivo do instalador apÃƒÂ³s a instalaÃƒÂ§ÃƒÂ£o.
 
     Args:
         installer_path (str): Caminho do arquivo a ser removido
@@ -213,38 +214,56 @@ def cleanup(installer_path):
     try:
         if os.path.exists(installer_path):
             os.remove(installer_path)
-            print(f"🗑️  Arquivo temporário removido: {installer_path}")
+            print(f"Ã°Å¸â€”â€˜Ã¯Â¸Â  Arquivo temporÃƒÂ¡rio removido: {installer_path}")
     except Exception as e:
-        print(f"⚠️  Não foi possível remover o arquivo temporário: {e}")
+        print(f"Ã¢Å¡Â Ã¯Â¸Â  NÃƒÂ£o foi possÃƒÂ­vel remover o arquivo temporÃƒÂ¡rio: {e}")
 
 
 def main():
-    """Função principal que orquestra o processo de instalação."""
+    """FunÃ§Ã£o principal que orquestra o processo de instalaÃ§Ã£o."""
+    # Import resiliente de configure_stdout_stderr (opcional)
+    try:
+        from nodeecli.modules.common import configure_stdout_stderr  # type: ignore
+    except ModuleNotFoundError:
+        try:
+            project_root = Path(__file__).resolve().parent.parent
+            if (project_root / 'nodeecli').is_dir() and str(project_root) not in sys.path:
+                sys.path.insert(0, str(project_root))
+            from nodeecli.modules.common import configure_stdout_stderr  # type: ignore
+        except ModuleNotFoundError:
+            def configure_stdout_stderr() -> None:  # type: ignore
+                return None
+
+    try:
+        configure_stdout_stderr()
+    except Exception:
+        pass
+    
     print_banner()
 
-    # Verificar se está no Windows
+    # Verificar se estÃƒÂ¡ no Windows
     if not verify_windows():
         return 1
     
     # Verificar arquitetura do sistema
     arch = platform.machine().lower()
     if arch not in ("amd64", "x86_64"):
-        print("⚠️  Aviso: Detectado sistema 32-bit.")
-        print("   • Este script baixa o instalador 64-bit do VS Code")
-        print("   • Para sistemas 32-bit, considere usar a variante win32-ia32")
-        print("   • A instalação pode não funcionar corretamente")
+        print("Ã¢Å¡Â Ã¯Â¸Â  Aviso: Detectado sistema 32-bit.")
+        print("   Ã¢â‚¬Â¢ Este script baixa o instalador 64-bit do VS Code")
+        print("   Ã¢â‚¬Â¢ Para sistemas 32-bit, considere usar a variante win32-ia32")
+        print("   Ã¢â‚¬Â¢ A instalaÃƒÂ§ÃƒÂ£o pode nÃƒÂ£o funcionar corretamente")
         print()
 
-    # Verificar privilégios de administrador
+    # Verificar privilÃƒÂ©gios de administrador
     admin_status = is_admin()
     if not admin_status:
-        print("ℹ️  Nota: Executando sem privilégios de administrador.")
-        print("   • O Instalador de Usuário do VS Code não requer administrador")
-        print("   • Alguns ambientes corporativos podem solicitar elevação")
-        print("   • Se encontrar problemas, execute como administrador")
+        print("Ã¢â€žÂ¹Ã¯Â¸Â  Nota: Executando sem privilÃƒÂ©gios de administrador.")
+        print("   Ã¢â‚¬Â¢ O Instalador de UsuÃƒÂ¡rio do VS Code nÃƒÂ£o requer administrador")
+        print("   Ã¢â‚¬Â¢ Alguns ambientes corporativos podem solicitar elevaÃƒÂ§ÃƒÂ£o")
+        print("   Ã¢â‚¬Â¢ Se encontrar problemas, execute como administrador")
         print()
     else:
-        print("✅ Executando com privilégios de administrador")
+        print("Ã¢Å“â€¦ Executando com privilÃƒÂ©gios de administrador")
         print()
 
     try:
@@ -253,26 +272,26 @@ def main():
         if not installer_path:
             return 1
 
-        # Executar instalação
+        # Executar instalaÃƒÂ§ÃƒÂ£o
         success = install_vscode(installer_path)
 
-        # Limpar arquivo temporário
+        # Limpar arquivo temporÃƒÂ¡rio
         cleanup(installer_path)
 
         if success:
-            print("\n🎉 Instalação concluída com sucesso!")
-            print("   O VS Code está pronto para uso.")
+            print("\nÃ°Å¸Å½â€° InstalaÃƒÂ§ÃƒÂ£o concluÃƒÂ­da com sucesso!")
+            print("   O VS Code estÃƒÂ¡ pronto para uso.")
             return 0
         else:
-            print("\n❌ Falha na instalação.")
+            print("\nÃ¢ÂÅ’ Falha na instalaÃƒÂ§ÃƒÂ£o.")
             print("   Tente executar o script novamente como administrador.")
             return 1
 
     except KeyboardInterrupt:
-        print("\n\n⚠️  Instalação cancelada pelo usuário.")
+        print("\n\nÃ¢Å¡Â Ã¯Â¸Â  InstalaÃƒÂ§ÃƒÂ£o cancelada pelo usuÃƒÂ¡rio.")
         return 1
     except Exception as e:
-        print(f"\n❌ Erro inesperado: {e}")
+        print(f"\nÃ¢ÂÅ’ Erro inesperado: {e}")
         return 1
 
 

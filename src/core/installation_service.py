@@ -24,6 +24,8 @@ class InstallationService:
         self,
         node_selected: bool,
         vscode_selected: bool,
+        git_selected: bool,
+        mcp_excel_selected: bool,
         auto_mode: bool,
         download_timeout: int,
         install_timeout: int,
@@ -32,7 +34,12 @@ class InstallationService:
         Runs the installations in a separate thread.
         """
         try:
-            total_steps = int(node_selected) + int(vscode_selected)
+            total_steps = (
+                int(node_selected)
+                + int(vscode_selected)
+                + int(git_selected)
+                + int(mcp_excel_selected)
+            )
             completed_steps = 0
             success_count = 0
             failure_count = 0
@@ -82,6 +89,46 @@ class InstallationService:
                     self.message_queue.put(('COMPLETE', success_count, failure_count))
                     return
 
+            if git_selected:
+                self.message_queue.put(('LOG', "=== Instalando Git for Windows ===", "INFO"))
+                args = self._build_git_args()
+                return_code = self._run_script(args, "Git")
+
+                if return_code == 0:
+                    success_count += 1
+                    self.message_queue.put(('LOG', "Git instalado com sucesso!", "SUCCESS"))
+                else:
+                    failure_count += 1
+                    self.message_queue.put(('LOG', f"Falha na instalação do Git (código: {return_code})", "ERROR"))
+
+                completed_steps += 1
+                self.message_queue.put(('PROGRESS', completed_steps / total_steps))
+
+                if self.cancel_requested:
+                    self.message_queue.put(('LOG', "Instalação cancelada pelo usuário", "WARNING"))
+                    self.message_queue.put(('COMPLETE', success_count, failure_count))
+                    return
+
+            if mcp_excel_selected:
+                self.message_queue.put(('LOG', "=== Instalando MCP Excel Server ===", "INFO"))
+                args = self._build_mcp_excel_args()
+                return_code = self._run_script(args, "MCP Excel Server")
+
+                if return_code == 0:
+                    success_count += 1
+                    self.message_queue.put(('LOG', "MCP Excel Server instalado com sucesso!", "SUCCESS"))
+                else:
+                    failure_count += 1
+                    self.message_queue.put(('LOG', f"Falha na instalação do MCP Excel Server (código: {return_code})", "ERROR"))
+
+                completed_steps += 1
+                self.message_queue.put(('PROGRESS', completed_steps / total_steps))
+
+                if self.cancel_requested:
+                    self.message_queue.put(('LOG', "Instalação cancelada pelo usuário", "WARNING"))
+                    self.message_queue.put(('COMPLETE', success_count, failure_count))
+                    return
+
             self.message_queue.put(('COMPLETE', success_count, failure_count))
 
         except Exception as e:
@@ -95,6 +142,7 @@ class InstallationService:
         try:
             env = os.environ.copy()
             env["PYTHONUNBUFFERED"] = "1"
+            env["PYTHONIOENCODING"] = "utf-8"
 
             process = subprocess.Popen(
                 args,
@@ -193,4 +241,23 @@ class InstallationService:
 
         if getattr(sys, 'frozen', False):
             return [str(base_path / 'vscode_installer.exe')]
+        return [sys.executable, str(script_path)]
+
+    def _build_git_args(self) -> List[str]:
+        """Builds the arguments for the Git installation script."""
+        base_path = self._get_base_path()
+        script_path = base_path / "git" / "git_installer.py"
+
+        if getattr(sys, 'frozen', False):
+            # Quando empacotado, o exe do Git fica em dist\git_installer\git_installer.exe
+            return [str(base_path.parent / 'git_installer' / 'git_installer.exe')]
+        return [sys.executable, str(script_path)]
+
+    def _build_mcp_excel_args(self) -> List[str]:
+        """Builds the arguments for the MCP Excel Server installation script."""
+        base_path = self._get_base_path()
+        script_path = base_path / "mcp_excel" / "mcp_excel_installer.py"
+
+        if getattr(sys, 'frozen', False):
+            return [str(base_path / 'mcp_excel_installer.exe')]
         return [sys.executable, str(script_path)]

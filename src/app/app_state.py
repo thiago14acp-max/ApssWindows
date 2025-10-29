@@ -12,6 +12,8 @@ class AppState:
         # Tool selection
         self.nodejs_var: tkinter.BooleanVar = tkinter.BooleanVar(value=False)
         self.vscode_var: tkinter.BooleanVar = tkinter.BooleanVar(value=False)
+        self.git_var: tkinter.BooleanVar = tkinter.BooleanVar(value=False)
+        self.mcp_excel_var: tkinter.BooleanVar = tkinter.BooleanVar(value=False)
 
         # Settings
         self.auto_mode_var: tkinter.BooleanVar = tkinter.BooleanVar(value=False)
@@ -20,4 +22,9 @@ class AppState:
 
     def is_tool_selected(self) -> bool:
         """Checks if any tool is selected for installation."""
-        return self.nodejs_var.get() or self.vscode_var.get()
+        return (
+            self.nodejs_var.get()
+            or self.vscode_var.get()
+            or self.git_var.get()
+            or self.mcp_excel_var.get()
+        )

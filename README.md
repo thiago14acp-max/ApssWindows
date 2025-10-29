@@ -1,48 +1,57 @@
 # Orquestrador de Instalações
 
-Uma aplicação de desktop para Windows que facilita a instalação de ferramentas de desenvolvimento como Node.js, Visual Studio Code e CLIs.
+Aplicação desktop para Windows que automatiza a instalação de ferramentas de desenvolvimento como Node.js, Visual Studio Code, Git e MCP Excel Server. Interface moderna com logs em tempo real, progresso e cancelamento.
 
 ## Funcionalidades
 
-- **Interface Gráfica Amigável**: Gerencie as instalações de forma visual e intuitiva.
-- **Instalação Automatizada**: Instala Node.js e ferramentas de linha de comando com um clique.
-- **Verificação de Dependências**: Garante que o ambiente esteja pronto para a instalação.
-- **Logs Detalhados**: Acompanhe o progresso da instalação em tempo real.
-- **Temas**: Suporte a temas claro, escuro e de sistema.
+- Interface gráfica amigável (CustomTkinter)
+- Instalação automatizada de Node.js, VS Code, Git e MCP Excel Server
+- Verificação de dependências e mensagens claras
+- Logs em tempo real e temas (claro/escuro/sistema)
 
 ## Como Usar
 
 ### Pré-requisitos
 
-- **Windows 10 ou superior**
-- **Python 3.7 ou superior**
+- Windows 10 ou superior
+- Python 3.7 ou superior
 
-### Execução
+### Como rodar localmente
 
-1.  **Clone o repositório:**
-    ```bash
-    git clone <url-do-repositorio>
-    cd <nome-do-repositorio>
-    ```
+1) Clone o repositório:
+```
+git clone <url-do-repositorio>
+cd <nome-do-repositorio>
+```
 
-2.  **Execute o script de inicialização:**
-    - Dê um duplo clique no arquivo `install_and_run.bat`.
-    - O script irá instalar as dependências necessárias e iniciar a aplicação.
+2) Instale dependências e execute a GUI:
+- Via script: execute `install_and_run.bat` (instala e inicia a aplicação)
+- Via terminal:
+```
+pip install -r requirements.txt
+python srcmain.py
+```
 
-    Como alternativa, você pode executar manualmente:
-    ```bash
-    pip install -r requirements.txt
-    python src/main.py
-    ```
+## Executáveis gerados (PyInstaller)
+
+- `dist/OrquestradorInstalacoes.exe` (GUI)
+- `dist/install_nodejs.exe` (Node.js)
+- `dist/vscode_installer.exe` (VS Code)
+- `dist/git_installer.exe` (Git)
+- `dist/mcp_excel_installer.exe` (MCP Excel Server)
 
 ## Estrutura do Projeto
 
-- **`src/`**: Contém o código-fonte da aplicação.
-  - **`app/`**: Lógica de orquestração e estado da aplicação.
-  - **`core/`**: Serviços de back-end, como o `InstallationService`.
-  - **`ui/`**: Componentes da interface gráfica.
-  - **`main.py`**: Ponto de entrada da aplicação.
-- **`nodeecli/`**: Scripts e módulos para a instalação do Node.js e CLIs.
-- **`vscode/`**: Scripts para a instalação do Visual Studio Code.
-- **`requirements.txt`**: Lista de dependências Python.
-- **`install_and_run.bat`**: Script para facilitar a execução no Windows.
+- `src/`: código-fonte da aplicação
+  - `app/`: orquestração e estado
+  - `core/`: serviços (ex.: `InstallationService`)
+  - `ui/`: componentes de interface
+  - `main.py`: ponto de entrada
+- `nodeecli/`: instalador do Node.js e CLIs
+- `vscode/`: instalador do Visual Studio Code
+- `git/`: instalador do Git for Windows
+- `mcp_excel/`: instalador do MCP Excel Server
+- `orchestrator.spec`: configuração do PyInstaller
+- `build_exe.bat`: script de build (gera executáveis em `dist/`)
+- `install_and_run.bat`: instalação e execução rápidas (Windows)
+- `requirements.txt`: dependências Python

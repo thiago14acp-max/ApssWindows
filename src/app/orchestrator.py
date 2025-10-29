@@ -24,6 +24,8 @@ class OrchestratorApp:
         """Configures listeners for UI events."""
         self.root.nodejs_checkbox.configure(variable=self.state.nodejs_var, command=self._on_checkbox_changed)
         self.root.vscode_checkbox.configure(variable=self.state.vscode_var, command=self._on_checkbox_changed)
+        self.root.git_checkbox.configure(variable=self.state.git_var, command=self._on_checkbox_changed)
+        self.root.mcp_excel_checkbox.configure(variable=self.state.mcp_excel_var, command=self._on_checkbox_changed)
         self.root.auto_mode_checkbox.configure(variable=self.state.auto_mode_var)
 
         self.root.install_button.configure(command=self.start_installation)
@@ -77,6 +79,8 @@ class OrchestratorApp:
             args=(
                 self.state.nodejs_var.get(),
                 self.state.vscode_var.get(),
+                self.state.git_var.get(),
+                self.state.mcp_excel_var.get(),
                 self.state.auto_mode_var.get(),
                 int(self.root.download_timeout_entry.get()),
                 int(self.root.install_timeout_entry.get()),
@@ -139,6 +143,8 @@ class OrchestratorApp:
         self.root.install_button.configure(state=state)
         self.root.nodejs_checkbox.configure(state=state)
         self.root.vscode_checkbox.configure(state=state)
+        self.root.git_checkbox.configure(state=state)
+        self.root.mcp_excel_checkbox.configure(state=state)
         self.root.cancel_button.configure(state="normal" if installing else "disabled")
         if installing:
             self.root.progress_bar.configure(mode="indeterminate")

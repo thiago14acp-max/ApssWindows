@@ -54,6 +54,16 @@ class MainView(ctk.CTk):
         )
         self.vscode_checkbox.grid(row=1, column=0, padx=10, pady=5, sticky="w")
 
+        self.git_checkbox = ctk.CTkCheckBox(
+            self.selection_frame, text="Git for Windows"
+        )
+        self.git_checkbox.grid(row=2, column=0, padx=10, pady=5, sticky="w")
+
+        self.mcp_excel_checkbox = ctk.CTkCheckBox(
+            self.selection_frame, text="MCP Excel Server"
+        )
+        self.mcp_excel_checkbox.grid(row=3, column=0, padx=10, pady=5, sticky="w")
+
         self.install_button = ctk.CTkButton(
             self.sidebar_frame, text="Iniciar Instalação", state="disabled"
         )
