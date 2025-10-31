@@ -72,8 +72,8 @@ Localizados em `tests/integration/`, estes testes verificam o funcionamento comp
 
 Para executar os testes de integração:
 ```bash
-python tests/integration/test_nodejs_installation.py
-python tests/integration/test_encoding.py
+python -m tests.integration.test_nodejs_installation
+python -m tests.integration.test_encoding
 ```
 
 ### Testes de Módulos Específicos
@@ -84,5 +84,19 @@ Localizados em `tests/nodeecli/`, estes testes verificam componentes específico
 
 Para executar os testes modulares:
 ```bash
-python tests/nodeecli/test_modular.py
+python -m tests.nodeecli.test_modular
+```
+
+### Testes de Instalação Completa
+
+Por padrão, o teste de instalação do Node.js executa apenas uma validação de inicialização para evitar efeitos colaterais. Para executar a instalação completa, defina a variável de ambiente `RUN_INSTALLATION_TESTS=1`:
+
+```bash
+# Executar teste completo de instalação do Node.js
+RUN_INSTALLATION_TESTS=1 python -m tests.integration.test_nodejs_installation
+
+# No Windows
+set RUN_INSTALLATION_TESTS=1 && python -m tests.integration.test_nodejs_installation
+# ou
+cmd /c "set RUN_INSTALLATION_TESTS=1 && python -m tests.integration.test_nodejs_installation"
 ```

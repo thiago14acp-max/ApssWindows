@@ -9,6 +9,10 @@ corretamente sem realizar instalações reais.
 import sys
 import os
 
+# Adicionar a raiz do projeto ao sys.path para garantir que nodeecli seja importável
+project_root = os.path.normpath(os.path.join(os.path.dirname(__file__), '..', '..'))
+sys.path.insert(0, project_root)
+
 def test_imports():
     """Testa se todos os módulos podem ser importados corretamente."""
     print("Testando imports dos módulos...")
