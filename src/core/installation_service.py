@@ -24,8 +24,10 @@ class InstallationService:
         self,
         node_selected: bool,
         vscode_selected: bool,
+        antigravity_selected: bool,
         git_selected: bool,
         mcp_excel_selected: bool,
+        opencode_selected: bool,
         auto_mode: bool,
         download_timeout: int,
         install_timeout: int,
@@ -37,8 +39,10 @@ class InstallationService:
             total_steps = (
                 int(node_selected)
                 + int(vscode_selected)
+                + int(antigravity_selected)
                 + int(git_selected)
                 + int(mcp_excel_selected)
+                + int(opencode_selected)
             )
             completed_steps = 0
             success_count = 0
@@ -89,6 +93,27 @@ class InstallationService:
                     self.message_queue.put(('COMPLETE', success_count, failure_count))
                     return
 
+
+            if antigravity_selected:
+                self.message_queue.put(('LOG', "=== Instalando Antigravity IDE ===", "INFO"))
+                args = self._build_antigravity_args()
+                return_code = self._run_script(args, "Antigravity IDE")
+
+                if return_code == 0:
+                    success_count += 1
+                    self.message_queue.put(('LOG', "Antigravity IDE instalado com sucesso!", "SUCCESS"))
+                else:
+                    failure_count += 1
+                    self.message_queue.put(('LOG', f"Falha na instalação do Antigravity IDE (código: {return_code})", "ERROR"))
+
+                completed_steps += 1
+                self.message_queue.put(('PROGRESS', completed_steps / total_steps))
+
+                if self.cancel_requested:
+                    self.message_queue.put(('LOG', "Instalação cancelada pelo usuário", "WARNING"))
+                    self.message_queue.put(('COMPLETE', success_count, failure_count))
+                    return
+
             if git_selected:
                 self.message_queue.put(('LOG', "=== Instalando Git for Windows ===", "INFO"))
                 args = self._build_git_args()
@@ -120,6 +145,26 @@ class InstallationService:
                 else:
                     failure_count += 1
                     self.message_queue.put(('LOG', f"Falha na instalação do MCP Excel Server (código: {return_code})", "ERROR"))
+
+                completed_steps += 1
+                self.message_queue.put(('PROGRESS', completed_steps / total_steps))
+
+                if self.cancel_requested:
+                    self.message_queue.put(('LOG', "Instalação cancelada pelo usuário", "WARNING"))
+                    self.message_queue.put(('COMPLETE', success_count, failure_count))
+                    return
+
+            if opencode_selected:
+                self.message_queue.put(('LOG', "=== Instalando OpenCode CLI (Bun) ===", "INFO"))
+                args = self._build_opencode_args()
+                return_code = self._run_script(args, "OpenCode CLI")
+
+                if return_code == 0:
+                    success_count += 1
+                    self.message_queue.put(('LOG', "OpenCode CLI instalado com sucesso!", "SUCCESS"))
+                else:
+                    failure_count += 1
+                    self.message_queue.put(('LOG', f"Falha na instalação do OpenCode CLI (código: {return_code})", "ERROR"))
 
                 completed_steps += 1
                 self.message_queue.put(('PROGRESS', completed_steps / total_steps))
@@ -243,6 +288,15 @@ class InstallationService:
             return [str(base_path / 'vscode_installer.exe')]
         return [sys.executable, str(script_path)]
 
+    def _build_antigravity_args(self) -> List[str]:
+        """Builds the arguments for the Antigravity IDE installation script."""
+        base_path = self._get_base_path()
+        script_path = base_path / "antigravity" / "installer.py"
+
+        if getattr(sys, 'frozen', False):
+            return [str(base_path / 'antigravity_installer.exe')]
+        return [sys.executable, str(script_path)]
+
     def _build_git_args(self) -> List[str]:
         """Builds the arguments for the Git installation script."""
         base_path = self._get_base_path()
@@ -260,4 +314,13 @@ class InstallationService:
 
         if getattr(sys, 'frozen', False):
             return [str(base_path / 'mcp_excel_installer.exe')]
+        return [sys.executable, str(script_path)]
+
+    def _build_opencode_args(self) -> List[str]:
+        """Builds the arguments for the OpenCode CLI (Bun) installation script."""
+        base_path = self._get_base_path()
+        script_path = base_path / "opencode" / "installer.py"
+
+        if getattr(sys, 'frozen', False):
+            return [str(base_path / 'opencode_installer.exe')]
         return [sys.executable, str(script_path)]

@@ -12,8 +12,10 @@ class AppState:
         # Tool selection
         self.nodejs_var: tkinter.BooleanVar = tkinter.BooleanVar(value=False)
         self.vscode_var: tkinter.BooleanVar = tkinter.BooleanVar(value=False)
+        self.antigravity_var: tkinter.BooleanVar = tkinter.BooleanVar(value=False)
         self.git_var: tkinter.BooleanVar = tkinter.BooleanVar(value=False)
         self.mcp_excel_var: tkinter.BooleanVar = tkinter.BooleanVar(value=False)
+        self.opencode_var: tkinter.BooleanVar = tkinter.BooleanVar(value=False)
 
         # Settings
         self.auto_mode_var: tkinter.BooleanVar = tkinter.BooleanVar(value=False)
@@ -25,6 +27,8 @@ class AppState:
         return (
             self.nodejs_var.get()
             or self.vscode_var.get()
+            or self.antigravity_var.get()
             or self.git_var.get()
             or self.mcp_excel_var.get()
+            or self.opencode_var.get()
         )
