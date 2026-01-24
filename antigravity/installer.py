@@ -7,23 +7,28 @@ Script Python que automatiza a instalação do Gemini CLI via npm.
 import sys
 import os
 import ctypes
-import platform
 from pathlib import Path
 
-# Adicionar diretório raiz ao path para importar nodeecli
-try:
-    from nodeecli.modules.gemini_cli_installer import GeminiCliInstaller
-    from nodeecli.modules.common import configure_stdout_stderr
-except ModuleNotFoundError:
+# --- CONFIGURAÇÃO DE IMPORTS ---
+def setup_imports():
+    """Configura o path para importar módulos do nodeecli."""
+    # Adicionar o diretório pai (raiz do projeto) ao sys.path se não estiver presente
+    current_dir = Path(__file__).resolve().parent
+    project_root = current_dir.parent
+    
+    if str(project_root) not in sys.path:
+        sys.path.insert(0, str(project_root))
+        
     try:
-        project_root = Path(__file__).resolve().parent.parent
-        if (project_root / 'nodeecli').is_dir() and str(project_root) not in sys.path:
-            sys.path.insert(0, str(project_root))
         from nodeecli.modules.gemini_cli_installer import GeminiCliInstaller
         from nodeecli.modules.common import configure_stdout_stderr
-    except ModuleNotFoundError:
-        print("Erro: Não foi possível importar os módulos necessários (nodeecli).")
-        print("Execute este script a partir da raiz do projeto: python antigravity/installer.py")
+        return GeminiCliInstaller, configure_stdout_stderr
+    except ModuleNotFoundError as e:
+        print("❌ Erro Crítico: Não foi possível importar os módulos necessários (nodeecli).")
+        print(f"   Erro detalhado: {e}")
+        print(f"   Diretório raiz tentado: {project_root}")
+        print("   Verifique se a estrutura do projeto está correta.")
+        input("Pressione Enter para sair...") # Pause para ler o erro
         sys.exit(1)
 
 
@@ -54,6 +59,9 @@ def verify_windows():
 
 def main():
     """Função principal."""
+    # Configura imports dinamicamente
+    GeminiCliInstaller, configure_stdout_stderr = setup_imports()
+
     try:
         configure_stdout_stderr()
     except Exception:
@@ -61,13 +69,11 @@ def main():
 
     print_banner()
 
-    # Verificar se está no Windows
     if not verify_windows():
         return 1
 
-    # Verificar privilégios de administrador (recomendado para instalação global npm)
-    admin_status = is_admin()
-    if not admin_status:
+    # Verificar privilégios de administrador
+    if not is_admin():
         print("ℹ️  Nota: Executando sem privilégios de administrador.")
         print("   • A instalação global do npm geralmente requer administrador")
         print("   • Se falhar, tente executar novamente como administrador")
@@ -77,7 +83,6 @@ def main():
         print()
 
     try:
-        # Instanciar e executar instalador
         installer = GeminiCliInstaller()
         success = installer.instalar()
 
@@ -98,3 +103,4 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main())
+
