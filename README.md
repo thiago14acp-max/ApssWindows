@@ -4,18 +4,36 @@ Aplicação desktop Windows para instalação automatizada de ferramentas de des
 
 ## Quick Start
 
-```bash
-# Clone e execute
-git clone <url-do-repositorio>
-cd <nome-do-repositorio>
+### 1. Verifique os pré-requisitos
 
-# Opção 1: Script automatizado
-install_and_run.bat
-
-# Opção 2: Manual
-pip install -r requirements.txt
-python srcmain.py
+```powershell
+python --version   # Python 3.7+ necessário
 ```
+
+### 2. Clone o repositório
+
+```powershell
+git clone https://github.com/seu-usuario/instalacoes.git
+cd instalacoes
+```
+
+### 3. Execute
+
+**Opção A — Automático** *(recomendado)*
+
+```powershell
+.\install_and_run.bat
+```
+
+**Opção B — Manual**
+
+```powershell
+pip install -r requirements.txt
+python src\main.py
+```
+
+> [!TIP]
+> O script `install_and_run.bat` cria automaticamente o ambiente virtual e instala as dependências.
 
 ## Ferramentas Suportadas
 
