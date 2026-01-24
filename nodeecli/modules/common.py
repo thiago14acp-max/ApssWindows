@@ -1,8 +1,8 @@
 ﻿"""
-MÃ³dulo com funcionalidades comuns compartilhadas entre os instaladores.
+Módulo com funcionalidades comuns compartilhadas entre os instaladores.
 
-Este mÃ³dulo contÃ©m classes e funÃ§Ãµes utilitÃ¡rias usadas por mÃºltiplos
-instaladores para evitar duplicaÃ§Ã£o de cÃ³digo.
+Este módulo contém classes e funções utilitárias usadas por múltiplos
+instaladores para evitar duplicação de código.
 """
 
 import subprocess
@@ -14,7 +14,7 @@ from datetime import datetime
 import shutil
 
 
-# Tornar a saÃ­da robusta a caracteres Unicode em consoles Windows
+# Tornar a saída robusta a caracteres Unicode em consoles Windows
 
 def configure_stdout_stderr():
     """
@@ -81,7 +81,7 @@ class Logger:
         
         Args:
             message (str): Mensagem para imprimir
-            verbose_only (bool): Se True, sÃ³ imprime se verbose estiver ativo
+            verbose_only (bool): Se True, só imprime se verbose estiver ativo
         """
         if verbose_only and not self.verbose:
             return
@@ -107,7 +107,7 @@ def detectar_arquitetura():
     Returns:
         str: 'x64', 'arm64', ou 'x86' dependendo da arquitetura detectada
     """
-    # Normalizar o nome da mÃ¡quina
+    # Normalizar o nome da máquina
     maquina = platform.machine().lower()
 
     # Verificar arquiteturas baseadas no platform.machine()
@@ -116,8 +116,8 @@ def detectar_arquitetura():
     elif maquina in ('arm64', 'aarch64'):
         return 'arm64'
 
-    # No Windows, verificar variÃ¡veis de ambiente para detectar corretamente
-    # quando Python Ã© 32-bit em um SO 64-bit
+    # No Windows, verificar variáveis de ambiente para detectar corretamente
+    # quando Python é 32-bit em um SO 64-bit
     if platform.system().lower() == 'windows':
         # PROCESSOR_ARCHITEW6432 indica que estamos em um processo 32-bit
         # em um sistema 64-bit (WOW64)
@@ -134,15 +134,15 @@ def detectar_arquitetura():
         elif proc_arch in ('arm64',):
             return 'arm64'
         elif proc_arch in ('x86',):
-            # Se estamos no x86, verificar se hÃ¡ indicaÃ§Ã£o de sistema 64-bit
-            # atravÃ©s de outras variÃ¡veis ou registro
+            # Se estamos no x86, verificar se há indicação de sistema 64-bit
+            # através de outras variáveis ou registro
             try:
-                # Tentar verificar se existe o diretÃ³rio de programas 64-bit
+                # Tentar verificar se existe o diretório de programas 64-bit
                 program_files_x86 = os.environ.get('ProgramFiles(x86)', '')
                 if program_files_x86 and os.path.exists(program_files_x86):
                     # Se existir ProgramFiles(x86), provavelmente estamos em sistema 64-bit
                     # com Python 32-bit
-                    # Verificar se Ã© ARM64 atravÃ©s do registro
+                    # Verificar se é ARM64 através do registro
                     try:
                         import winreg
                         with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE,
@@ -161,37 +161,37 @@ def detectar_arquitetura():
             except Exception:
                 pass
 
-    # PadrÃ£o: assumir x86 se nÃ£o conseguir detectar outra arquitetura
+    # Padrão: assumir x86 se não conseguir detectar outra arquitetura
     return 'x86'
 
 
 def verificar_permissoes_admin():
     """
-    Verifica se o script estÃ¡ sendo executado com permissÃµes de administrador.
+    Verifica se o script está sendo executado com permissões de administrador.
 
     Returns:
-        bool: True se tem permissÃµes de administrador, False caso contrÃ¡rio
+        bool: True se tem permissões de administrador, False caso contrário
     """
     try:
         import ctypes
         return ctypes.windll.shell32.IsUserAnAdmin() != 0
     except:
-        # Se nÃ£o conseguir verificar, assume que nÃ£o Ã© admin
+        # Se não conseguir verificar, assume que não é admin
         return False
 
 
 def detectar_nvm_windows():
     """
-    Detecta a presenÃ§a do nvm-windows no sistema.
+    Detecta a presença do nvm-windows no sistema.
 
     Returns:
-        bool: True se nvm-windows estÃ¡ detectado, False caso contrÃ¡rio
+        bool: True se nvm-windows está detectado, False caso contrário
     """
-    # Verificar se o comando 'nvm' estÃ¡ no PATH
+    # Verificar se o comando 'nvm' está no PATH
     if shutil.which('nvm'):
         return True
 
-    # Verificar variÃ¡veis de ambiente do nvm-windows
+    # Verificar variáveis de ambiente do nvm-windows
     if os.environ.get('NVM_HOME') or os.environ.get('NVM_SYMLINK'):
         return True
 
@@ -200,31 +200,31 @@ def detectar_nvm_windows():
 
 def configurar_execution_policy():
     """
-    Configura a polÃ­tica de execuÃ§Ã£o do PowerShell para RemoteSigned.
+    Configura a política de execução do PowerShell para RemoteSigned.
 
-    Esta funÃ§Ã£o executa o comando Set-ExecutionPolicy para permitir a execuÃ§Ã£o
-    de scripts PowerShell assinados remotamente, necessÃ¡rio para algumas
-    operaÃ§Ãµes do Node.js e npm.
+    Esta função executa o comando Set-ExecutionPolicy para permitir a execução
+    de scripts PowerShell assinados remotamente, necessário para algumas
+    operações do Node.js e npm.
 
     Returns:
-        bool: True se a configuraÃ§Ã£o foi bem-sucedida ou jÃ¡ estava configurada,
-              False se houve erro (mas nÃ£o interrompe o fluxo)
+        bool: True se a configuração foi bem-sucedida ou já estava configurada,
+              False se houve erro (mas não interrompe o fluxo)
     """
-    print("\nConfigurando polÃ­tica de execuÃ§Ã£o do PowerShell...")
+    print("\nConfigurando política de execução do PowerShell...")
 
-    # Tentar diferentes caminhos para o PowerShell em ordem de preferÃªncia
+    # Tentar diferentes caminhos para o PowerShell em ordem de preferência
     powershell_candidates = []
 
-    # 1. Caminho completo do Windows PowerShell (mais comum e disponÃ­vel)
+    # 1. Caminho completo do Windows PowerShell (mais comum e disponível)
     system_root = os.environ.get('SystemRoot', r'C:\Windows')
     powershell_full_path = os.path.join(system_root, 'System32', 'WindowsPowerShell', 'v1.0', 'powershell.exe')
     if os.path.exists(powershell_full_path):
         powershell_candidates.append(powershell_full_path)
 
-    # 2. powershell.exe no PATH (padrÃ£o)
+    # 2. powershell.exe no PATH (padrão)
     powershell_candidates.append('powershell.exe')
 
-    # 3. pwsh.exe (PowerShell Core/7) se disponÃ­vel
+    # 3. pwsh.exe (PowerShell Core/7) se disponível
     pwsh_path = shutil.which('pwsh')
     if pwsh_path:
         powershell_candidates.append(pwsh_path)
@@ -234,7 +234,7 @@ def configurar_execution_policy():
         if os.path.exists(pwsh_program_files):
             powershell_candidates.append(pwsh_program_files)
 
-    # Tentar executar com cada candidato atÃ© encontrar um que funcione
+    # Tentar executar com cada candidato até encontrar um que funcione
     for powershell_exe in powershell_candidates:
         try:
             # Construir o comando PowerShell
@@ -244,7 +244,7 @@ def configurar_execution_policy():
                 '-Scope', 'CurrentUser', '-Force'
             ]
 
-            # Executar o comando usando subprocess com codificaÃ§Ã£o UTF-8
+            # Executar o comando usando subprocess com codificação UTF-8
             resultado = subprocess.run(
                 comando,
                 capture_output=True,
@@ -257,35 +257,35 @@ def configurar_execution_policy():
 
             # Verificar o resultado
             if resultado.returncode == 0:
-                print("âœ“ PolÃ­tica de execuÃ§Ã£o do PowerShell configurada com sucesso!")
+                print("✅ Política de execução do PowerShell configurada com sucesso!")
                 return True
             else:
-                # Se o executÃ¡vel foi encontrado mas o comando falhou, nÃ£o tentar outros candidatos
-                # (o problema provavelmente Ã© com a polÃ­tica de execuÃ§Ã£o, nÃ£o com o executÃ¡vel)
-                print(f"âš ï¸  AVISO: Falha ao configurar polÃ­tica de execuÃ§Ã£o (cÃ³digo: {resultado.returncode})")
+                # Se o executável foi encontrado mas o comando falhou, não tentar outros candidatos
+                # (o problema provavelmente é com a política de execução, não com o executável)
+                print(f"⚠️  AVISO: Falha ao configurar política de execução (código: {resultado.returncode})")
                 if resultado.stderr:
                     print(f"Detalhes: {resultado.stderr.strip()}")
-                print("A instalaÃ§Ã£o do Node.js continuarÃ¡ normalmente.")
+                print("A instalação do Node.js continuará normalmente.")
                 return False
 
         except subprocess.TimeoutExpired:
-            print("âš ï¸  AVISO: Timeout ao configurar polÃ­tica de execuÃ§Ã£o do PowerShell.")
-            print("A instalaÃ§Ã£o do Node.js continuarÃ¡ normalmente.")
+            print("⚠️  AVISO: Timeout ao configurar política de execução do PowerShell.")
+            print("A instalação do Node.js continuará normalmente.")
             return False
         except FileNotFoundError:
-            # Se este executÃ¡vel nÃ£o foi encontrado, tentar o prÃ³ximo candidato
+            # Se este executável não foi encontrado, tentar o próximo candidato
             continue
         except Exception as e:
-            print(f"âš ï¸  AVISO: Erro ao configurar polÃ­tica de execuÃ§Ã£o: {e}")
-            print("A instalaÃ§Ã£o do Node.js continuarÃ¡ normalmente.")
+            print(f"⚠️  AVISO: Erro ao configurar política de execução: {e}")
+            print("A instalação do Node.js continuará normalmente.")
             return False
 
     # Se chegou aqui, nenhum candidato foi encontrado
-    print("âš ï¸  AVISO: PowerShell nÃ£o encontrado no sistema.")
+    print("⚠️  AVISO: PowerShell não encontrado no sistema.")
     print("Tentado os seguintes caminhos:")
     for candidate in powershell_candidates:
         print(f"  - {candidate}")
-    print("A instalaÃ§Ã£o do Node.js continuarÃ¡ normalmente.")
+    print("A instalação do Node.js continuará normalmente.")
     return False
 
 
@@ -296,10 +296,10 @@ def preparar_ambiente_nodejs():
     Returns:
         dict: Ambiente modificado com os caminhos do Node.js no PATH
     """
-    # Criar cÃ³pia do ambiente atual e atualizar PATH com diretÃ³rios do Node.js
+    # Criar cópia do ambiente atual e atualizar PATH com diretórios do Node.js
     novo_ambiente = os.environ.copy()
 
-    # Adicionar diretÃ³rios do Node.js ao PATH
+    # Adicionar diretórios do Node.js ao PATH
     nodejs_paths = [
         os.path.expandvars(r'%ProgramFiles%\nodejs'),
         os.path.expandvars(r'%ProgramFiles(x86)%\nodejs'),
