@@ -1,102 +1,40 @@
 # Orquestrador de Instalações
 
-Aplicação desktop para Windows que automatiza a instalação de ferramentas de desenvolvimento como Node.js, Visual Studio Code, Git e MCP Excel Server. Interface moderna com logs em tempo real, progresso e cancelamento.
+Aplicação desktop Windows para instalação automatizada de ferramentas de desenvolvimento.
 
-## Funcionalidades
+## Quick Start
 
-- Interface gráfica amigável (CustomTkinter)
-- Instalação automatizada de Node.js, VS Code, Git e MCP Excel Server
-- Verificação de dependências e mensagens claras
-- Logs em tempo real e temas (claro/escuro/sistema)
-
-## Como Usar
-
-### Pré-requisitos
-
-- Windows 10 ou superior
-- Python 3.7 ou superior
-
-### Como rodar localmente
-
-1) Clone o repositório:
-```
+```bash
+# Clone e execute
 git clone <url-do-repositorio>
 cd <nome-do-repositorio>
-```
 
-2) Instale dependências e execute a GUI:
-- Via script: execute `install_and_run.bat` (instala e inicia a aplicação)
-- Via terminal:
-```
+# Opção 1: Script automatizado
+install_and_run.bat
+
+# Opção 2: Manual
 pip install -r requirements.txt
 python srcmain.py
 ```
 
-## Executáveis gerados (PyInstaller)
+## Ferramentas Suportadas
 
-- `dist/OrquestradorInstalacoes.exe` (GUI)
-- `dist/install_nodejs.exe` (Node.js)
-- `dist/vscode_installer.exe` (VS Code)
-- `dist/git_installer.exe` (Git)
-- `dist/mcp_excel_installer.exe` (MCP Excel Server)
+| Ferramenta | Descrição |
+|------------|-----------|
+| **Node.js** | Runtime + CLI Tools |
+| **VS Code** | Editor de código |
+| **Git** | Controle de versão |
+| **MCP Excel** | Server para Excel |
+| **Antigravity** | Gemini CLI *(em desenvolvimento)* |
+| **OpenCode** | OpenCode CLI *(em desenvolvimento)* |
 
-## Estrutura do Projeto
+## Documentação
 
-- `src/`: código-fonte da aplicação
-  - `app/`: orquestração e estado
-  - `core/`: serviços (ex.: `InstallationService`)
-  - `ui/`: componentes de interface
-  - `main.py`: ponto de entrada
-- `nodeecli/`: instalador do Node.js e CLIs
-- `vscode/`: instalador do Visual Studio Code
-- `git/`: instalador do Git for Windows
-- `mcp_excel/`: instalador do MCP Excel Server
-- `tests/`: testes do projeto
-  - `integration/`: testes de integração que verificam o funcionamento completo dos instaladores
-  - `nodeecli/`: testes específicos do módulo Node.js CLI
-- `orchestrator.spec`: configuração do PyInstaller
-- `build_exe.bat`: script de build (gera executáveis em `dist/`)
-- `install_and_run.bat`: instalação e execução rápidas (Windows)
-- `requirements.txt`: dependências Python
+- [Arquitetura](docs/architecture.md) — Estrutura do projeto e componentes
+- [Testes](docs/testing.md) — Como executar os testes
+- [Build](docs/build.md) — Gerar executáveis
 
-## Testes
+## Requisitos
 
-O projeto possui uma estrutura de testes organizada para verificar o funcionamento dos instaladores:
-
-### Testes de Integração
-
-Localizados em `tests/integration/`, estes testes verificam o funcionamento completo dos instaladores:
-
-- `test_nodejs_installation.py`: Testa a instalação do Node.js simulando o cenário original
-- `test_encoding.py`: Verifica problemas de codificação em múltiplos scripts (Node.js e VS Code)
-
-Para executar os testes de integração:
-```bash
-python -m tests.integration.test_nodejs_installation
-python -m tests.integration.test_encoding
-```
-
-### Testes de Módulos Específicos
-
-Localizados em `tests/nodeecli/`, estes testes verificam componentes específicos do módulo Node.js CLI:
-
-- `test_modular.py`: Testa a implementação modularizada do instalador Node.js
-
-Para executar os testes modulares:
-```bash
-python -m tests.nodeecli.test_modular
-```
-
-### Testes de Instalação Completa
-
-Por padrão, o teste de instalação do Node.js executa apenas uma validação de inicialização para evitar efeitos colaterais. Para executar a instalação completa, defina a variável de ambiente `RUN_INSTALLATION_TESTS=1`:
-
-```bash
-# Executar teste completo de instalação do Node.js
-RUN_INSTALLATION_TESTS=1 python -m tests.integration.test_nodejs_installation
-
-# No Windows
-set RUN_INSTALLATION_TESTS=1 && python -m tests.integration.test_nodejs_installation
-# ou
-cmd /c "set RUN_INSTALLATION_TESTS=1 && python -m tests.integration.test_nodejs_installation"
-```
+- Windows 10+
+- Python 3.7+
