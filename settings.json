@@ -1,0 +1,11 @@
+{
+    "nodejs": false,
+    "vscode": false,
+    "git": false,
+    "mcp_excel": false,
+    "antigravity": false,
+    "opencode": false,
+    "auto_mode": false,
+    "download_timeout": "300",
+    "install_timeout": "600"
+}
