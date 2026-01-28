@@ -261,3 +261,102 @@ git_exe = EXE(
     entitlements_file=None,
     icon='icon.ico'
 )
+
+# Análise separada para o instalador do Antigravity
+antigravity_analysis = Analysis(
+    ['antigravity/installer.py'],
+    pathex=['.'],
+    binaries=[],
+    datas=[],
+    hiddenimports=[
+        'subprocess',
+        'pathlib',
+        'sys',
+        'os',
+        'ctypes'
+    ],
+    hookspath=[],
+    hooksconfig={},
+    runtime_hooks=[],
+    excludes=[],
+    win_no_prefer_redirects=False,
+    win_private_assemblies=False,
+    cipher=block_cipher,
+    noarchive=False,
+)
+
+antigravity_pyz = PYZ(antigravity_analysis.pure, antigravity_analysis.zipped_data, cipher=block_cipher)
+
+antigravity_exe = EXE(
+    antigravity_pyz,
+    antigravity_analysis.scripts,
+    antigravity_analysis.binaries,
+    antigravity_analysis.zipfiles,
+    antigravity_analysis.datas,
+    [],
+    name='antigravity_installer',
+    debug=False,
+    bootloader_ignore_signals=False,
+    strip=False,
+    upx=True,
+    upx_exclude=[],
+    runtime_tmpdir=None,
+    console=True,
+    disable_windowed_traceback=False,
+    argv_emulation=False,
+    target_arch=None,
+    codesign_identity=None,
+    entitlements_file=None,
+    icon='icon.ico'
+)
+
+# Análise separada para o instalador do OpenCode
+opencode_analysis = Analysis(
+    ['opencode/installer.py'],
+    pathex=['.'],
+    binaries=[],
+    datas=[],
+    hiddenimports=[
+        'subprocess',
+        'pathlib',
+        'sys',
+        'os',
+        'ctypes',
+        'requests',
+        'hashlib',
+        'shutil'
+    ],
+    hookspath=[],
+    hooksconfig={},
+    runtime_hooks=[],
+    excludes=[],
+    win_no_prefer_redirects=False,
+    win_private_assemblies=False,
+    cipher=block_cipher,
+    noarchive=False,
+)
+
+opencode_pyz = PYZ(opencode_analysis.pure, opencode_analysis.zipped_data, cipher=block_cipher)
+
+opencode_exe = EXE(
+    opencode_pyz,
+    opencode_analysis.scripts,
+    opencode_analysis.binaries,
+    opencode_analysis.zipfiles,
+    opencode_analysis.datas,
+    [],
+    name='opencode_installer',
+    debug=False,
+    bootloader_ignore_signals=False,
+    strip=False,
+    upx=True,
+    upx_exclude=[],
+    runtime_tmpdir=None,
+    console=True,
+    disable_windowed_traceback=False,
+    argv_emulation=False,
+    target_arch=None,
+    codesign_identity=None,
+    entitlements_file=None,
+    icon='icon.ico'
+)

@@ -1,7 +1,11 @@
 
 import tkinter.messagebox as messagebox
+import sys
 import threading
 import queue
+import json
+import os
+from pathlib import Path
 import customtkinter as ctk
 from ..ui.main_view import MainView
 from .app_state import AppState
@@ -17,8 +21,48 @@ class OrchestratorApp:
         self.message_queue = queue.Queue()
         self.installation_service = InstallationService(self.message_queue)
 
+        self._load_settings()
         self._configure_ui_listeners()
         self.root.set_on_closing_callback(self._on_closing)
+
+    def _get_settings_path(self) -> Path:
+        """Returns the path to the settings file."""
+        if getattr(sys, 'frozen', False):
+            base_dir = Path(sys.executable).parent
+        else:
+            base_dir = Path(__file__).parent.parent.parent
+        return base_dir / "settings.json"
+
+    def _load_settings(self) -> None:
+        """Loads settings from a JSON file."""
+        settings_path = self._get_settings_path()
+        if settings_path.exists():
+            try:
+                with open(settings_path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    self.state.from_dict(data)
+                self.root.log_message("Configurações carregadas com sucesso.", "INFO")
+            except Exception as e:
+                self.root.log_message(f"Erro ao carregar configurações: {e}", "ERROR")
+
+        # Atualizar a UI com os timers carregados
+        self.root.download_timeout_entry.delete(0, "end")
+        self.root.download_timeout_entry.insert(0, self.state.download_timeout)
+        self.root.install_timeout_entry.delete(0, "end")
+        self.root.install_timeout_entry.insert(0, self.state.install_timeout)
+
+    def _save_settings(self) -> None:
+        """Saves current settings to a JSON file."""
+        # Update state from UI before saving
+        self.state.download_timeout = self.root.download_timeout_entry.get()
+        self.state.install_timeout = self.root.install_timeout_entry.get()
+
+        settings_path = self._get_settings_path()
+        try:
+            with open(settings_path, "w", encoding="utf-8") as f:
+                json.dump(self.state.to_dict(), f, indent=4)
+        except Exception as e:
+            print(f"Erro ao salvar configurações: {e}")
 
     def _configure_ui_listeners(self) -> None:
         """Configures listeners for UI events."""
@@ -26,6 +70,8 @@ class OrchestratorApp:
         self.root.vscode_checkbox.configure(variable=self.state.vscode_var, command=self._on_checkbox_changed)
         self.root.git_checkbox.configure(variable=self.state.git_var, command=self._on_checkbox_changed)
         self.root.mcp_excel_checkbox.configure(variable=self.state.mcp_excel_var, command=self._on_checkbox_changed)
+        self.root.antigravity_checkbox.configure(variable=self.state.antigravity_var, command=self._on_checkbox_changed)
+        self.root.opencode_checkbox.configure(variable=self.state.opencode_var, command=self._on_checkbox_changed)
         self.root.auto_mode_checkbox.configure(variable=self.state.auto_mode_var)
 
         self.root.install_button.configure(command=self.start_installation)
@@ -81,6 +127,8 @@ class OrchestratorApp:
                 self.state.vscode_var.get(),
                 self.state.git_var.get(),
                 self.state.mcp_excel_var.get(),
+                self.state.antigravity_var.get(),
+                self.state.opencode_var.get(),
                 self.state.auto_mode_var.get(),
                 int(self.root.download_timeout_entry.get()),
                 int(self.root.install_timeout_entry.get()),
@@ -156,6 +204,7 @@ class OrchestratorApp:
 
     def _on_closing(self) -> None:
         """Handles the window closing event."""
+        self._save_settings()
         if self.state.installation_in_progress:
             if messagebox.askyesno(
                 "Instalação em Andamento",
